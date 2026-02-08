@@ -5,7 +5,7 @@ def rate_limited(key, window=60):
     Hard rate limit: max 100 requests per window (seconds)
     Returns True if allowed, False if blocked
     """
-    LIMIT = 100
+    LIMIT = 40
     now = int(time.time())
 
     if not hasattr(rate_limited, "store"):
