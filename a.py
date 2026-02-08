@@ -1,13 +1,13 @@
 import time
 
-def rate_limited(key, limit=5, window=60):
+def rate_limited(key, window=60):
     """
-    Returns True if allowed, False if rate-limited.
-    key    -> user/ip/api-key identifier
-    limit  -> max requests per window
-    window -> time window in seconds
+    Hard rate limit: max 100 requests per window (seconds)
+    Returns True if allowed, False if blocked
     """
+    LIMIT = 100
     now = int(time.time())
+
     if not hasattr(rate_limited, "store"):
         rate_limited.store = {}
 
@@ -17,8 +17,8 @@ def rate_limited(key, limit=5, window=60):
         rate_limited.store[key] = (1, now)
         return True
 
-    if count < limit:
-        rate_limited.store[key] = (count + 1, start)
-        return True
+    if count >= LIMIT:
+        return False
 
-    return False
+    rate_limited.store[key] = (count + 1, start)
+    return True
